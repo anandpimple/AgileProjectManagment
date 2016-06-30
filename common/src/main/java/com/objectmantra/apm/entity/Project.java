@@ -18,6 +18,7 @@ public class Project extends Versioned<Project> {
     private String projectName;
     private String projectDescription;
     private Set<ProjectUser> users;
+    private Set<Story> stories;
 
     public String getProjectName() {
         return projectName;
