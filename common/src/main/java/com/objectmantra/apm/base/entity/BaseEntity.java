@@ -1,10 +1,12 @@
 package com.objectmantra.apm.base.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * Created by dev on 29/06/16.
@@ -13,9 +15,8 @@ import java.io.Serializable;
 public abstract class BaseEntity implements Serializable {
     @Id
     @Column(name = "ID")
+    @XStreamOmitField
     private Long id;
-    @Version
-    private Integer version;
 
 
     public Long getId() {
@@ -25,11 +26,19 @@ public abstract class BaseEntity implements Serializable {
         this.id = id;
     }
 
-    public Integer getVersion() {
-        return version;
+    @XStreamOmitField
+    private static final XStream xStream = new XStream();
+    @XStreamOmitField
+    private static final XStream xstreamJson = new XStream(new JsonHierarchicalStreamDriver());
+    static{
+        xStream.autodetectAnnotations(true);
+        xstreamJson.autodetectAnnotations(true);
+    }
+    public String toXml(){
+        return xStream.toXML(this);
+    }
+    public String toString(){
+        return xstreamJson.toXML(this);
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
 }
